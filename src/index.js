@@ -3,6 +3,10 @@ const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
 const validLogin = require('./middlewares/userValidation');
+const validToken = require('./middlewares/tokenValidation');
+const validName = require("./middlewares/nameValidation");
+const validAge = require("./middlewares/ageValidation");
+const validTalk = require("./middlewares/talkValidation");
 
 const app = express();
 app.use(express.json());
@@ -15,6 +19,14 @@ const readFile = async () => {
     return JSON.parse(data);
   } catch (error) {
     console.error(`Arquivo não pôde ser lido: ${error}`);
+  }
+};
+
+const writeFile = async (newTalker) => {
+  try {
+    await fs.writeFile(talker, JSON.stringify(newTalker));
+  } catch (error) {
+    console.error(`Arquivo não pôde ser escrito: ${error}`);
   }
 };
 
@@ -56,4 +68,13 @@ app.post('/login', validLogin, (req, res) => {
   res.status(200).json({
     token: tokenRdm,
   });
+});
+
+app.post('/talker', validToken, validName, validAge, validTalk, async (req, res) => {
+  const talkers = await readFile();
+  const numTalkers = talkers.length;
+  const newTalker = {...req.body, id: numTalkers + 1};
+  talkers.push(newTalker);
+  await writeFile(talkers);
+  res.status(201).json(newTalker);
 });
