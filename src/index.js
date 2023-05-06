@@ -51,8 +51,8 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-  const token = crypto.randomBytes(8).toString('hex');
+  const tokenRdm = crypto.randomBytes(8).toString('hex');
   res.status(200).json({
-    "token": token
+    token: tokenRdm,
   });
 });
