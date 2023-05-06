@@ -1,10 +1,10 @@
 const validPassword = (password) => {
   const limit = 6;
   if (!password) {
-    return 'O campo \"password\" é obrigatório';
+    return 'O campo "password" é obrigatório';
   }
   if (password.length < limit) {
-    return 'O \"password\" deve ter pelo menos 6 caracteres';
+    return 'O "password" deve ter pelo menos 6 caracteres';
   }
   return true;
 };
@@ -12,10 +12,10 @@ const validPassword = (password) => {
 const validEmail = (email) => {
   const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i;
   if (!email) {
-    return 'O campo \"email\" é obrigatório';
+    return 'O campo "email" é obrigatório';
   }
   if (!regex.test(email)) {
-    return 'O \"email\" deve ter o formato \"email@email.com\"';
+    return 'O "email" deve ter o formato "email@email.com"';
   }
   return true;
 };
