@@ -1,12 +1,11 @@
 const test = (name) => {
   if (!name) {
     return 'O campo "name" é obrigatório';
-  } else {
-    if (name.length < 3) {
+  }
+  if (name.length < 3) {
       return 'O "name" deve ter pelo menos 3 caracteres';
-    }
-    return true;
-  } 
+  }
+  return true;
 };
 
 const validName = (req, res, next) => {

@@ -3,20 +3,18 @@ const testTalk = (talk) => {
   if (!talk) {
     return 'O campo "talk" é obrigatório';
   }
-  const { watchedAt, rate} = talk;
+  const { watchedAt, rate } = talk;
   if (!watchedAt) {
     return 'O campo "watchedAt" é obrigatório';
-  } else {
-    if (!regex.test(watchedAt)) {
-      return 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"';
-    }
+  }
+  if (!regex.test(watchedAt)) {
+    return 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"';
   }
   if (rate === undefined) {
     return 'O campo "rate" é obrigatório';
-  } else {
-    if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
-      return 'O campo "rate" deve ser um número inteiro entre 1 e 5';
-    }
+  }
+  if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
+    return 'O campo "rate" deve ser um número inteiro entre 1 e 5';
   }
   return true;
 };

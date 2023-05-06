@@ -4,9 +4,9 @@ const path = require('path');
 const crypto = require('crypto');
 const validLogin = require('./middlewares/userValidation');
 const validToken = require('./middlewares/tokenValidation');
-const validName = require("./middlewares/nameValidation");
-const validAge = require("./middlewares/ageValidation");
-const validTalk = require("./middlewares/talkValidation");
+const validName = require('./middlewares/nameValidation');
+const validAge = require('./middlewares/ageValidation');
+const validTalk = require('./middlewares/talkValidation');
 
 const app = express();
 app.use(express.json());
@@ -73,7 +73,7 @@ app.post('/login', validLogin, (req, res) => {
 app.post('/talker', validToken, validName, validAge, validTalk, async (req, res) => {
   const talkers = await readFile();
   const numTalkers = talkers.length;
-  const newTalker = {...req.body, id: numTalkers + 1};
+  const newTalker = { ...req.body, id: numTalkers + 1 };
   talkers.push(newTalker);
   await writeFile(talkers);
   res.status(201).json(newTalker);
