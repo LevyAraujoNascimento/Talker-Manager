@@ -24,18 +24,15 @@ const validLogin = (req, res, next) => {
   const { password, email } = req.body;
   const resultEmail = validEmail(email);
   const resultPassword = validPassword(password);
+  let result = false;
+  if (resultEmail !== true) result = resultEmail;
+  if (resultPassword !== true) result = resultPassword;
   if (resultEmail === true && resultPassword === true) {
     next();
   } else {
-    if (resultEmail !== true) {
-      res.status(400).send({
-        "message": resultEmail
-      })    
-    } else {
-        res.status(400).send({
-            "message": resultPassword
-          })  
-    }
+    res.status(400).send({
+      message: result
+    })
   }
 };
 
