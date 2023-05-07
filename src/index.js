@@ -71,10 +71,35 @@ app.post('/login', validLogin, (req, res) => {
 });
 
 app.post('/talker', validToken, validName, validAge, validTalk, async (req, res) => {
+  const { name, age, talk } = req.body;
   const talkers = await readFile();
   const numTalkers = talkers.length;
-  const newTalker = { ...req.body, id: numTalkers + 1 };
+  const newTalker = { 
+    name,
+    age,
+    id: numTalkers + 1,
+    talk,
+  };
   talkers.push(newTalker);
   await writeFile(talkers);
   res.status(201).json(newTalker);
+});
+
+app.put('/talker/:id', validToken, validName, validAge, validTalk, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const { watchedAt, rate } = talk;
+  const talkers = await readFile();
+  const updateTalkers = talkers.find((element) => element.id === parseInt(id, 10));
+  if (updateTalkers === undefined) {
+    res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  } else {
+    updateTalkers.name = name;
+    updateTalkers.age = age;
+    updateTalkers.talk.watchedAt = watchedAt;
+    updateTalkers.talk.rate = rate;
+    talkers[parseInt(id, 10) - 1] = updateTalkers;
+    await writeFile(talkers);
+    res.status(200).json({ updateTalkers });
+  }
 });
