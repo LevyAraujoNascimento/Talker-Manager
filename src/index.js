@@ -108,7 +108,7 @@ app.delete('/talker/:id', validToken, async (req, res) => {
   const { id } = req.params;
   const talkers = await readFile();
 
-  const newTalkers = talkers.filter((talker) => talker.id !== parseInt(id, 10));
+  const newTalkers = talkers.filter((element) => element.id !== parseInt(id, 10));
   await writeFile(newTalkers);
 
   res.status(204).end();
