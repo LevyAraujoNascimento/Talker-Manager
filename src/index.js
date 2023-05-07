@@ -100,6 +100,6 @@ app.put('/talker/:id', validToken, validName, validAge, validTalk, async (req, r
     updateTalkers.talk.rate = rate;
     talkers[parseInt(id, 10) - 1] = updateTalkers;
     await writeFile(talkers);
-    res.status(200).json({ updateTalkers });
+    res.status(200).json(updateTalkers);
   }
 });
