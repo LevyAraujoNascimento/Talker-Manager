@@ -7,6 +7,7 @@ const validToken = require('./middlewares/tokenValidation');
 const validName = require('./middlewares/nameValidation');
 const validAge = require('./middlewares/ageValidation');
 const validTalk = require('./middlewares/talkValidation');
+const validPatch = require('./middlewares/patchValidation');
 
 const app = express();
 app.use(express.json());
@@ -135,5 +136,21 @@ app.delete('/talker/:id', validToken, async (req, res) => {
   const newTalkers = talkers.filter((element) => element.id !== parseInt(id, 10));
   await writeFile(newTalkers);
 
+  res.status(204).end();
+});
+
+app.patch('/talker/rate/:id', validToken, validPatch, async (req, res) => {
+  const { id } = req.params;
+  const { rate } = req.body;
+  const talkers = await readFile();
+
+  const updateTalkers = talkers.find((element) => element.id === parseInt(id, 10));
+  if (updateTalkers === undefined) {
+    res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  } else {
+    updateTalkers.talk.rate = rate;
+    talkers[parseInt(id, 10) - 1] = updateTalkers;
+    await writeFile(talkers);
+  }
   res.status(204).end();
 });
