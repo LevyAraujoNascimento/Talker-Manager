@@ -7,7 +7,6 @@ const validToken = require('./middlewares/tokenValidation');
 const validName = require('./middlewares/nameValidation');
 const validAge = require('./middlewares/ageValidation');
 const validTalk = require('./middlewares/talkValidation');
-const validRate = require('./middlewares/rateValidation');
 
 const app = express();
 app.use(express.json());
@@ -31,6 +30,13 @@ const writeFile = async (newTalker) => {
   }
 };
 
+const validQ = (q, talkers) => {
+  if (!q) {
+    return talkers;
+  }
+  return talkers.filter((element) => element.name.includes(q));
+};
+
 const HTTP_OK_STATUS = 200;
 const PORT = process.env.PORT || '3001';
 
@@ -52,22 +58,21 @@ app.get('/talker', async (_req, res) => {
   }
 });
 
-app.get('/talker/search', validToken, validRate, async (req, res) => {
+app.get('/talker/search', validToken, async (req, res) => {
   const { q, rate } = req.query;
   const talkers = await readFile();
   let searchResult = [];
-  
-  if (!q) {
-    searchResult = talkers;
-  } else {
-    searchResult = talkers.filter((element) => element.name.includes(q));
-  }
-
+  let stat = 200;
+  searchResult = validQ(q, talkers);
   if (rate !== undefined) {
-    searchResult = searchResult.filter((element) => element.talk.rate === Number(rate));
+    if (!Number.isInteger(Number(rate)) || Number(rate) < 1 || Number(rate) > 5) {
+      searchResult = { message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' };
+      stat = 400;
+    } else {
+      searchResult = searchResult.filter((element) => element.talk.rate === Number(rate));
+    }
   }
-
-  res.status(200).json(searchResult);
+  res.status(stat).json(searchResult);
 });
 
 app.get('/talker/:id', async (req, res) => {
